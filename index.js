@@ -15,7 +15,7 @@ searchBtn.addEventListener("click", function (e) {
 			`https://api.dictionaryapi.dev/api/v2/entries/en/${inp.value}`,
 			true
 		);
-		xhr.onprogress = function () {
+		xhr.onprogress = function () { 
 			console.log("On Progress");
 		};
 
