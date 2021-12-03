@@ -1,10 +1,13 @@
 let searchBtn = document.getElementById("searchBtn");
 let inp = document.getElementById("input");
 let word_div = document.getElementById("word-content");
-searchBtn.addEventListener("click", function (e) {
+let main = document.getElementById("main");
+searchBtn.addEventListener("click", (e) => {
 	e.preventDefault();
-	if (inp.value == "") {
-		word_div.innerHTML = "Please enter a word to search";
+	let regex = /^[a-zA-Z]+$/;
+	console.log(regex.test(inp.value));
+	if (inp.value === "" || !regex.test(inp.value)) {
+		word_div.innerHTML = "Please enter a valid word to search";
 		setTimeout(() => {
 			word_div.innerHTML = "";
 		}, 2000);
@@ -22,6 +25,8 @@ searchBtn.addEventListener("click", function (e) {
 
 		xhr.onload = function () {
 			if (this.status == 200) {
+				word_div.style.background = "transparent";
+				word_div.style.height = "auto";
 				let res = this.response;
 				let json = JSON.parse(res);
 				let word = json[0];
@@ -50,11 +55,23 @@ searchBtn.addEventListener("click", function (e) {
 				str += `</div></div>`;
 				word_div.innerHTML = str;
 				inp.value = "";
-			} else console.log("Some Error Occured");
+			} else {
+				console.log("Running");
+				let divWidth = word_div.offsetWidth;
+				let vwHeight = document.documentElement.clientHeight;
+				let mainHeight = main.offsetHeight;
+				console.log(vwHeight, mainHeight);
+				let remHeight = vwHeight - mainHeight;
+				let optimalSize = Math.min(remHeight, divWidth);
+				let back = (optimalSize - 200 > 140 ? optimalSize - 200 : 140) + "px";
+				console.log(back);
+				word_div.style.height = remHeight - 40 + "px";
+				word_div.style.background = `url('./noData.svg') no-repeat center center`;
+
+				word_div.style.backgroundSize = `${back} ${back}`;
+			}
 		};
 
 		xhr.send();
 	}
 });
-
-const m;
